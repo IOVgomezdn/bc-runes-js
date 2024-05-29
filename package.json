@@ -1,0 +1,21 @@
+{
+  "name": "bc-runes-js",
+  "version": "1.0.0",
+  "main": "./index.js",
+  "scripts": {
+    "random-wif": "node src/utils/getRandomWIF.js",
+    "generate-addresses": "node src/utils/addresses.js log"
+  },
+  "keywords": ["runes", "bitcoin", "inscriptions"],
+  "author": "",
+  "license": "ISC",
+  "description": "A package to be able to mint, etch or transfer bitcoin runes very easily.",
+  "dependencies": {
+    "@bitcoinerlab/secp256k1": "^1.1.1",
+    "axios": "^1.6.8",
+    "bitcoinjs-lib": "^6.1.5",
+    "dotenv": "^16.4.5",
+    "ecpair": "^2.1.0",
+    "runelib": "^1.0.6"
+  }
+}
