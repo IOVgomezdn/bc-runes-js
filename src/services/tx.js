@@ -39,7 +39,9 @@ async function isConfirmed(txHash) {
 }
 
 async function waitForTxToMature(txHash) {
-  log(`Waiting for transaction ${txHash} to mature..`)
+  await waitForTxToBeConfirmed(txHash)
+  log(`Now waiting for it to mature..`)
+
   let confirmations = await getConfirmations(txHash)
 
   while (confirmations < 6) {
@@ -48,7 +50,7 @@ async function waitForTxToMature(txHash) {
     confirmations = await getConfirmations(txHash)
   }
 
-  log('Transaction reached 6 or more confirmations')
+  log(`Transaction ${txHash} reached 6 or more confirmations`)
   return { txHash }
 }
 
