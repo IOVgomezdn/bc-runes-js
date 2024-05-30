@@ -60,8 +60,6 @@ async function mint(name, runeId) {
   return { txHash }
 }
 
-mint('gota de agua')
-
 module.exports = {
   mint
 }
