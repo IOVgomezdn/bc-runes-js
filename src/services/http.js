@@ -11,14 +11,12 @@ async function get(url, retries = 0) {
 
     return data
   } catch (e) {
-    log(e.message)
-
     if (retries < REQUEST_RETRIES) {
-      log(`Retryig in ${RETRY_INTERVAL / 1000} seconds`)
-      await sleep(REQUEST_RETRIES)
+      log(`Retrying in ${RETRY_INTERVAL / 1000} seconds`)
+      await sleep(RETRY_INTERVAL)
       await get(url, retries +1)
     } else {
-      throw new Error(e)
+      throw new Error(`${e.message}, URL: ${url}`)
     }
   }
 }
@@ -37,14 +35,12 @@ async function post(url, payload, retries = 0) {
   
     return data
   } catch (e) {
-    log(e.message)
-
     if (retries < REQUEST_RETRIES) {
-      log(`Retryig in ${RETRY_INTERVAL / 1000} seconds`)
-      await sleep(REQUEST_RETRIES)
+      log(`Retrying in ${RETRY_INTERVAL / 1000} seconds`)
+      await sleep(RETRY_INTERVAL)
       await get(url, retries +1)
     } else {
-      throw new Error(e)
+      throw new Error(`${e.message}, URL: ${url}`)
     }
   }
 }

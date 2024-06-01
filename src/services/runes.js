@@ -1,6 +1,5 @@
 const { get } = require('./http.js')
 const { searchRunesURL } = require('../config.js')
-const { log } = require('../utils/logger.js')
 
 async function getRuneIdByName(name) {
   const { data: { detail : runes } } = await get(searchRunesURL(name))

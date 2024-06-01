@@ -1,8 +1,7 @@
 const bitcoin = require('bitcoinjs-lib')
-const { toXOnly } = require('./tweakSigner.js')
-const { tweakedSigner, untweakedSigner } = require('../config.js')
-
-const network = bitcoin.networks.testnet
+const { toXOnly, tweakSigner } = require('./tweakSigner.js')
+const { getRandomWif } = require('./getRandomWIF.js')
+const { wif, testnetNetwork: network, ECPair } = require('../config.js')
 
 function getP2tr({
   internalPubkey,
@@ -25,22 +24,42 @@ function getP2tr({
     }
 }
 
-const { address: paymentAddress } = bitcoin.payments.p2wpkh({
-  pubkey: untweakedSigner.publicKey,
-  network
-})
+function generateAddresses(_wif) {
 
-const { address: ordinalsAddress } = bitcoin.payments.p2tr({
-  pubkey: toXOnly(tweakedSigner.publicKey),
-  network
-})
+  if (!_wif) {
+    _wif = wif() || process.argv[3]
 
-if (process.argv[2] === 'log') {
-  console.log({ paymentAddress, ordinalsAddress })
+    if (!_wif) {
+      console.log('No WIF set, generating new random addresses')
+      _wif = getRandomWif()
+    }
+  }
+
+  const untweakedSigner = ECPair.fromWIF(_wif, network)
+  const tweakedSigner = tweakSigner(untweakedSigner)
+
+  const p2wpkh = bitcoin.payments.p2wpkh({
+    pubkey: untweakedSigner.publicKey,
+    network
+  })
+  
+  const p2tr = bitcoin.payments.p2tr({
+    pubkey: toXOnly(tweakedSigner.publicKey),
+    network
+  })
+
+  return {
+    paymentAddress: p2wpkh.address,
+    ordinalsAddress: p2tr.address,
+    WIF: _wif
+  }
+}
+
+if (process.argv[2] === '--log=addresses') {
+  console.log({ ...generateAddresses() })
 }
 
 module.exports = {
-  ordinalsAddress,
-  paymentAddress,
-  getP2tr
+  getP2tr,
+  generateAddresses
 }

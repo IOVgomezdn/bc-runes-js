@@ -1,9 +1,13 @@
 const { get } = require('./http.js')
-const { utxoURL, bitcoin, testnetNetwork, untweakedSigner } = require('../config.js')
-const { estimate } = require('./estimate.js')
-const { signAndSubmit } = require('./tx.js')
+const { signAndSubmit, waitForTxToBeConfirmed } = require('./tx.js')
 const { log } = require('../utils/logger.js')
-const { sleep } = require('../utils/sleep.js')
+const { 
+  utxoURL,
+  bitcoin,
+  testnetNetwork,
+  untweakedSigner,
+  feePerByte
+} = require('../config.js')
 
 async function findFirstUtxoAvailable(address, amountNeeded) {
   const utxos = await getUTxos(address)
@@ -63,7 +67,7 @@ async function getUTxos(address) {
 
 async function consolidateUtxos(address) {
   const utxos = await getUTxos(address)
-  const fee = await estimate(6)
+  const fee = feePerByte() * 153
 
   const unsignedTx = new bitcoin.Psbt({ network: testnetNetwork })
   let total = 0
@@ -85,12 +89,14 @@ async function consolidateUtxos(address) {
   }
 
   if (total) {
+    // TO DO: parameterize that 153 value for the actual vBytes of the tx 
     log(`Consolidating all UTXOs from address ${address} with a total of ${total - fee * 153} satoshis.`)
     
-    unsignedTx.addOutput({ address, value: total - fee * 153 })  
-    const { txHash } = await signAndSubmit(unsignedTx, untweakedSigner)
-  
+    unsignedTx.addOutput({ address, value: total - fee })  
+    const { txHash } = await signAndSubmit(unsignedTx, untweakedSigner())
     log(`Submitted UTXOs consolidation transaction with hash ${txHash}.`)
+
+    await waitForTxToBeConfirmed(txHash)
   } else {
     log('No UTXOs to consolidate yet.')
   }
@@ -102,5 +108,6 @@ async function splitUtxos(address) {
 
 module.exports = {
   findFirstUtxoAvailable,
-  findUtxo
+  findUtxo,
+  consolidateUtxos
 }

@@ -1,4 +1,4 @@
-const { get, post } = require('./http.js')
+const { get } = require('./http.js')
 const { estimateURL } = require('../config.js')
 
 async function estimate(blocks) {

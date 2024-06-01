@@ -29,11 +29,11 @@ async function revealTx({
   })
 
   unsignedTx.addOutput({
-    address: ordinalsAddress,
+    address: ordinalsAddress(),
     value: 546
   })
 
-  const { txHash: revealTxHash } = await signAndSubmit(unsignedTx, tweakedSigner)
+  const { txHash: revealTxHash } = await signAndSubmit(unsignedTx, tweakedSigner())
   log(`Reveal transaction submitted with hash ${revealTxHash}`)
 
   return { revealTxHash }
