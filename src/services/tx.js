@@ -22,7 +22,7 @@ async function signAndSubmit(unsignedTx, signer) {
 }
 
 async function getConfirmations(txHash) {
-  const { status: { block_height: blockHeight } } = await get(txInfoURL(txHash))
+  const { status: { block_height: blockHeight } } = await getTxInfo(txHash)
   const { tipBlock } = await getTip()
 
   if (blockHeight) {
@@ -33,9 +33,15 @@ async function getConfirmations(txHash) {
 }
 
 async function isConfirmed(txHash) {
-  const { status: { confirmed } } = await get(txInfoURL(txHash))
+  const { status: { confirmed } } = await getTxInfo(txHash)
 
   return confirmed
+}
+
+async function getTxInfo(txHash) {
+  const tx = await get(txInfoURL(txHash))
+
+  return tx
 }
 
 async function waitForTxToMature(txHash) {
@@ -70,6 +76,7 @@ async function waitForTxToBeConfirmed(txHash) {
 
 module.exports = {
   signAndSubmit,
+  getTxInfo,
   isConfirmed,
   getConfirmations,
   waitForTxToBeConfirmed,

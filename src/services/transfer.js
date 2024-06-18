@@ -1,18 +1,19 @@
 const { findFirstUtxoAvailable } = require('./utxo.js')
 const {
   bitcoin,
-  untweakedSigner,
-  paymentAddress,
+  tweakedSigner,
   testnetNetwork,
-  feePerByte
+  feePerVByte,
+  taprootInputSize,
+  taprootOutputSize,
 } = require('../config.js')
 const { signAndSubmit } = require('../services/tx.js')
 
 async function transfer(from, to, amount) {
-  const estimatedVBytes = 153
-  const fee = feePerByte() * estimatedVBytes
+  const estimatedVBytes = taprootInputSize + taprootOutputSize * 2
+  const fee = feePerVByte() * estimatedVBytes
 
-  const utxo = await findFirstUtxoAvailable(paymentAddress(), amount + fee)
+  const utxo = await findFirstUtxoAvailable(from, amount + fee)
   const unsignedTx = new bitcoin.Psbt({ network: testnetNetwork })
 
   unsignedTx.addInput(utxo)
@@ -23,7 +24,7 @@ async function transfer(from, to, amount) {
 
   unsignedTx.addOutput({ address: from, value: change })
 
-  const { txHash } = await signAndSubmit(unsignedTx, untweakedSigner())
+  const { txHash } = await signAndSubmit(unsignedTx, tweakedSigner())
 
   return { txHash }
 }

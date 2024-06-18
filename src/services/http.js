@@ -14,7 +14,8 @@ async function get(url, retries = 0) {
     if (retries < REQUEST_RETRIES) {
       log(`Retrying in ${RETRY_INTERVAL / 1000} seconds`)
       await sleep(RETRY_INTERVAL)
-      await get(url, retries +1)
+
+      return get(url, retries +1)
     } else {
       throw new Error(`${e.message}, URL: ${url}`)
     }
@@ -38,7 +39,8 @@ async function post(url, payload, retries = 0) {
     if (retries < REQUEST_RETRIES) {
       log(`Retrying in ${RETRY_INTERVAL / 1000} seconds`)
       await sleep(RETRY_INTERVAL)
-      await get(url, retries +1)
+
+      return post(url, retries +1)
     } else {
       throw new Error(`${e.message}, URL: ${url}`)
     }
