@@ -10,46 +10,49 @@ const blockstreamBaseURL = 'https://blockstream.info/testnet/api'
 const txURL = `${blockstreamBaseURL}/tx`
 const txInfoURL = (txHash) => `${txURL}/${txHash}`
 const utxoURL = (address) => `${blockstreamBaseURL}/address/${address}/utxo`
-const searchRunesURL = (name) => `https://api-testnet.unisat.io/query-v4/runes/info-list?rune=${name}&limit=500`
+const runesBaseURL = 'https://api-testnet.unisat.io/query-v4'
+const runeByIdURL = (runeId) => `${runesBaseURL}/runes/${runeId}/info`
+const runeByNameURL = (name) => `${runesBaseURL}/runes/info-list?rune=${name}&limit=500`
+const runesByAddressURL = (address) => `${runesBaseURL}/address/${address}/runes/balance-list`
+const runeUtxosForAddressURL = (address, runeId) => `${runesBaseURL}/address/${address}/runes/${runeId}/utxo`
 const estimateURL = `${blockstreamBaseURL}/fee-estimates`
 const getTipURL = `${blockstreamBaseURL}/blocks/tip/height`
 const testnetNetwork = bitcoin.networks.testnet
 
-let _paymentAddress, _ordinalsAddress, _wif, _untweakedSigner, _tweakedSigner, _feeEstimate, _feePerByte
+let _taprootAddress, _wif, _tweakedSigner, _feeEstimate, _feePerVByte
 
 function setWif(wif) {
   _wif = wif
 }
 
-function setAddresses(paymentAddress, ordinalsAddress) {
-  _paymentAddress = paymentAddress
-  _ordinalsAddress = ordinalsAddress
+function setAddress(taprootAddress) {
+  _taprootAddress = taprootAddress
 }
 
 function setFeeEstimate(feeEstimate) {
   _feeEstimate = feeEstimate
 }
 
-function setFeePerByte(feePerByte) {
-  _feePerByte = feePerByte
+function setfeePerVByte(feePerVByte) {
+  _feePerVByte = feePerVByte
 }
 
-function setSigners(wif) {
-  _untweakedSigner = ECPair.fromWIF(wif, testnetNetwork)
-  _tweakedSigner = tweakSigner(_untweakedSigner)
+function setSigner(wif) {
+  const untweakedSigner = ECPair.fromWIF(wif, testnetNetwork)
+  _tweakedSigner = tweakSigner(untweakedSigner)
 }
 
-function init({ paymentAddress, ordinalsAddress, wif, feePerByte, estimate }) {
+function init({ taprootAddress, wif, feePerVByte, estimate }) {
   setWif(wif)
-  setSigners(wif)
-  setAddresses(paymentAddress, ordinalsAddress)
+  setSigner(wif)
+  setAddress(taprootAddress)
   
-  if (feePerByte) {
-    setFeePerByte(feePerByte)
+  if (feePerVByte) {
+    setfeePerVByte(feePerVByte)
   } else if (estimate) {
     setFeeEstimate(estimate)
   } else {
-    throw new Error('Either set a feePerByte value or a fee estimate by blocks, for transactions')
+    throw new Error('Either set a feePerVByte value or a fee estimate by blocks, for transactions')
   }
 }
 
@@ -60,17 +63,20 @@ module.exports = {
   setWif,
   setFeeEstimate,
   feeEstimate: () => _feeEstimate,
-  feePerByte: () => _feePerByte,
+  feePerVByte: () => _feePerVByte,
+  taprootInputSize: 61,
+  taprootOutputSize: 46,
   wif: () => _wif,
-  untweakedSigner: () => _untweakedSigner,
   tweakedSigner: () => _tweakedSigner,
-  paymentAddress: () => _paymentAddress,
-  ordinalsAddress: () => _ordinalsAddress,
+  taprootAddress: () => _taprootAddress,
   blockstreamBaseURL,
   txURL,
   txInfoURL,
   utxoURL,
-  searchRunesURL,
+  runeByNameURL,
+  runeByIdURL,
+  runesByAddressURL,
+  runeUtxosForAddressURL,
   estimateURL,
   getTipURL,
   testnetNetwork

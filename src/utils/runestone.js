@@ -9,6 +9,18 @@ const {
   getSpacersVal
 } = require('runelib')
 
+function transferRunestoneScript(edicts) {
+  const transferstone = new Runestone(edicts, none(), none(), none())
+
+  return transferstone.encipher()
+}
+
+function mintRunestoneScript(runeId) {
+  const mintstone = new Runestone([], none(), some(new RuneId(...runeId.split(':'))), some(1))
+
+  return mintstone.encipher()
+}
+
 function etchRunestoneScript({
   name,
   amount,
@@ -37,5 +49,7 @@ function etchRunestoneScript({
 }
 
 module.exports = {
-  etchRunestoneScript
+  etchRunestoneScript,
+  transferRunestoneScript,
+  mintRunestoneScript
 }
