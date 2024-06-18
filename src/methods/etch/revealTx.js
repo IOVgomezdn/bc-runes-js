@@ -1,7 +1,7 @@
 const {
   bitcoin,
   testnetNetwork,
-  ordinalsAddress,
+  taprootAddress,
   tweakedSigner
 } = require('../../config.js')
 const { etchRunestoneScript } = require('../../utils/runestone.js')
@@ -29,7 +29,7 @@ async function revealTx({
   })
 
   unsignedTx.addOutput({
-    address: ordinalsAddress(),
+    address: taprootAddress(),
     value: 546
   })
 

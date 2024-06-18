@@ -1,5 +1,5 @@
 # BC RUNES JS
-A package that makes use of [runelib](https://www.npmjs.com/package/runelib) library to allow minting, etching or transferring [bitcoin runes](https://docs.ordinals.com/runes/specification.html) very easily, by abstracting a bit more of what runelib does, creating the whole environment and scripts for transaction signing, submitting, and waiting.
+A package that makes use of [runelib](https://www.npmjs.com/package/runelib) library to allow minting, etching or transferring [bitcoin runes](https://docs.taproot.com/runes/specification.html) very easily, by abstracting a bit more of what runelib does, creating the whole environment and scripts for transaction signing, submitting, and waiting.
 
 # USAGE
 
@@ -21,13 +21,12 @@ A package that makes use of [runelib](https://www.npmjs.com/package/runelib) lib
   Will output the following
   ```bash
     {
-      paymentAddress: 'tb1qjv2yav5wrfgljqgsyqm2fk0duf6g24fn54sw5l',
-      ordinalsAddress: 'tb1paygndrxzphwlgpn8utlcp592wf267jvk50wxnam6zuvszruhk3pqut4e6f',
+      taprootAddress: 'tb1paygndrxzphwlgpn8utlcp592wf267jvk50wxnam6zuvszruhk3pqut4e6f',
       WIF: 'cMjdU3yAEif9P6eug1pa3MxYbpgPjd5vTnRP1cfzLPrWg85N5NAg'
     }
   ```
   
-  Save `paymentAddress`, `ordinalsAddress` and `WIF` in an .env file or anywhere for later use in the project. These addresses are, respectively, the one that should hold the satoshis to pay for transaction fees, and the address that will own the runes etched or minted.
+  Save `taprootAddress` and `WIF` in an .env file or anywhere for later use in the project. These addresses are, respectively, the one that should hold the satoshis to pay for transaction fees, and the address that will own the runes etched or minted.
  <br>
  <br>
  **Note:** the addresses and keys shown in this example are randomly generated and purely for this example, don't try to use them.
@@ -42,17 +41,15 @@ const {
 } = require('bc-runes-js')
 
 const {
-  PAYMENT_ADDRESS,
-  ORDINALS_ADDRESS,
+  TAPROOT_ADDRESS,
   WIF
 } = process.env
 
 async function main() {
   init({
-    paymentAddress: PAYMENT_ADDRESS,
-    ordinalsAddress: ORDINALS_ADDRESS,
+    taprootAddress: TAPROOT_ADDRESS,
     wif: WIF,
-    feePerByte: 300
+    feePerVByte: 300
   })
 
   const res = await etch({
@@ -77,23 +74,21 @@ const {
 } = require('bc-runes-js')
 
 const {
-  PAYMENT_ADDRESS,
-  ORDINALS_ADDRESS,
+  TAPROOT_ADDRESS,
   WIF
 } = process.env
 
 async function main() {
   init({
-    paymentAddress: PAYMENT_ADDRESS,
-    ordinalsAddress: ORDINALS_ADDRESS,
+    taprootAddress: TAPROOT_ADDRESS,
     wif: WIF,
-    feePerByte: 300
+    feePerVByte: 300
   })
 
   // only one of these two arguments is mandatory
   const res = await mint({
-    name: '',
-    runeId: [blockNumber, txIndex]
+    name: 'a rune name with or without spacers (•)',
+    runeId: 'blockNumber:txIndex'
   })
 
   console.log({ res })

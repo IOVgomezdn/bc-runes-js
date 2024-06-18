@@ -37,11 +37,6 @@ function generateAddresses(_wif) {
 
   const untweakedSigner = ECPair.fromWIF(_wif, network)
   const tweakedSigner = tweakSigner(untweakedSigner)
-
-  const p2wpkh = bitcoin.payments.p2wpkh({
-    pubkey: untweakedSigner.publicKey,
-    network
-  })
   
   const p2tr = bitcoin.payments.p2tr({
     pubkey: toXOnly(tweakedSigner.publicKey),
@@ -49,8 +44,7 @@ function generateAddresses(_wif) {
   })
 
   return {
-    paymentAddress: p2wpkh.address,
-    ordinalsAddress: p2tr.address,
+    taprootAddress: p2tr.address,
     WIF: _wif
   }
 }

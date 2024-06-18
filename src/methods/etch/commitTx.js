@@ -2,9 +2,9 @@ const { EtchInscription } = require('runelib')
 const { getP2tr } = require('../../utils/addresses.js')
 const {
   bitcoin,
-  paymentAddress,
   tweakedSigner,
-  feePerByte
+  feePerVByte,
+  taprootAddress
 } = require('../../config.js')
 const { toXOnly } = require('../../utils/tweakSigner.js')
 const { transfer } = require('../../services/transfer.js')
@@ -39,7 +39,7 @@ async function commitTx({
 
   const scriptP2trAddress= scriptP2tr.address
 
-  const p2trTxFee = feePerByte() * 207
+  const p2trTxFee = feePerVByte() * 215
 
   const tapLeafScript = [{
     leafVersion: etchingRedeem.redeemVersion,
@@ -47,8 +47,8 @@ async function commitTx({
     controlBlock: etchingP2tr.witness[etchingP2tr.witness.length - 1]
   }]
 
-  log(`Sending commit transaction to taproot address ${scriptP2trAddress}`)
-  const { txHash: commitTxHash } = await transfer(paymentAddress(), scriptP2trAddress, p2trTxFee + 546)
+  log(`Attempting to send commit transaction to taproot address ${scriptP2trAddress}`)
+  const { txHash: commitTxHash } = await transfer(taprootAddress(), scriptP2trAddress, p2trTxFee + 546)
   log(`Commit transaction submitted with hash ${commitTxHash}`)
 
   return {
