@@ -97,7 +97,7 @@ async function transferTx(transfers) {
   runesUtxos = filterUtxos(runesUtxos)
   unsignedTx.addInputs(runesUtxos)
 
-  const estimatedVBytes = (runesUtxos.length + 1) * taprootInputSize + transfers.length * taprootOutputSize
+  const estimatedVBytes = (runesUtxos.length + 1) * taprootInputSize + (transfers.length + 1) * taprootOutputSize
   const fee = estimatedVBytes * feePerVByte()
   const feesUtxo = await findFirstUtxoAvailable(taprootAddress(), fee + 546)
   unsignedTx.addInput(feesUtxo)

@@ -1,10 +1,10 @@
 {
   "name": "bc-runes-js",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "main": "./index.js",
   "scripts": {
     "random-wif": "node src/utils/getRandomWIF.js --log=wif",
-    "generate-addresses": "node src/utils/addresses.js --log=addresses"
+    "generate-address": "node src/utils/address.js --log=address"
   },
   "keywords": [
     "runes",

@@ -10,11 +10,11 @@ const { isConfirmed, getConfirmations, waitForTxToBeConfirmed, waitForTxToMature
 const { findUtxo, consolidateUtxos } = require('./src/services/utxo.js')
 const { getRuneIdByName, getRunesByAddress } = require('./src/services/runes.js')
 const { getRandomWif } = require('./src/utils/getRandomWIF.js')
-const { generateAddresses } = require('./src/utils/addresses.js')
+const { generateAddress } = require('./src/utils/address.js')
 
 module.exports = {
   getRandomWif,
-  generateAddresses,
+  generateAddress,
   setWif,
   init,
   etch,

@@ -3,19 +3,19 @@ A package that makes use of [runelib](https://www.npmjs.com/package/runelib) lib
 
 # USAGE
 
-## Preparing the addresses
+## Preparing the address
   ```javascript
     const {
-      generateAddresses,
+      generateAddress,
       getRandomWif
     } = require('bc-runes-js')
 
     async function main() {
-      // If getting addresses for the first time, a random wif should be used.
-      // Otherwise, skip the line below and invoke generateAddresses($yourWif)
+      // If getting an address for the first time, a random wif should be used.
+      // Otherwise, skip the line below and invoke generateAddress($yourWif)
       const randomWif = getRandomWif()
-      const addresses = generateAddresses(randomWif)
-      console.log(addresses)
+      const address = generateAddress(randomWif).taprootAddress
+      console.log(address)
     }
   ```
   Will output the following
@@ -26,10 +26,10 @@ A package that makes use of [runelib](https://www.npmjs.com/package/runelib) lib
     }
   ```
   
-  Save `taprootAddress` and `WIF` in an .env file or anywhere for later use in the project. These addresses are, respectively, the one that should hold the satoshis to pay for transaction fees, and the address that will own the runes etched or minted.
+  Save `taprootAddress` and `WIF` in an .env file or anywhere for later use in the project. This only taproot address will hold the runes sent to it, minted or premined, in outputs with a value of 546. It will need bigger utxos to pay the fees for the transactions it may send.
  <br>
  <br>
- **Note:** the addresses and keys shown in this example are randomly generated and purely for this example, don't try to use them.
+ **Note:** the address in this example is randomly generated and purely for this example, don't try to use it.
 
 
 ## Example for etching a rune
@@ -97,5 +97,36 @@ async function main() {
 main()
 ```
 
-## Example for minting a rune
-Not implemented yet. Will be available soon.
+## Example for transferring a rune
+```javascript
+const {
+  transfer,
+  init
+} = require('bc-runes-js')
+
+const {
+  TAPROOT_ADDRESS,
+  WIF
+} = process.env
+
+async function main() {
+  init({
+    taprootAddress: TAPROOT_ADDRESS,
+    wif: WIF,
+    feePerVByte: 300
+  })
+
+  // only the rune name or the id is needed in a transfer object
+  const res = await transfer([
+    { amount: 'how many runes to transfer',
+      to: 'taproot address to send the runes',
+      runeId: 'the id of the rune'
+      name: 'the full name of the rune, with or without spacers'
+    },
+    { 
+      // other desired transfer objects
+    }
+  ])
+
+  console.log({ res })
+}
