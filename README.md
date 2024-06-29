@@ -29,7 +29,7 @@ A package that makes use of [runelib](https://www.npmjs.com/package/runelib) lib
   Save `taprootAddress` and `WIF` in an .env file or anywhere for later use in the project. This only taproot address will hold the runes sent to it, minted or premined, in outputs with a value of 546. It will need bigger utxos to pay the fees for the transactions it may send.
  <br>
  <br>
- **Note:** the address in this example is randomly generated and purely for this example, don't try to use it.
+ **Note:** the address is randomly generated and purely for this example, don't try to use it.
 
 
 ## Example for etching a rune
@@ -119,8 +119,8 @@ async function main() {
   // only the rune name or the id is needed in a transfer object
   const res = await transfer([
     { amount: 'how many runes to transfer',
-      to: 'taproot address to send the runes',
-      runeId: 'the id of the rune'
+      to: 'taproot address to send the runes to',
+      runeId: 'the id of the rune',
       name: 'the full name of the rune, with or without spacers'
     },
     { 
