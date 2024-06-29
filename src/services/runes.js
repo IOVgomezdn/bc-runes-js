@@ -20,8 +20,6 @@ async function getRunesByAddress(address) {
   return runes
 }
 
-getRunesByAddress('tb1pe8smtt4wuttcekz4klh5wh4hvw25jhhmldcscwwyxyatrhuc5c8qhpl9fy')
-
 module.exports = {
   getRuneIdByName,
   getRuneNameById,
