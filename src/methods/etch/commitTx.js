@@ -1,5 +1,5 @@
 const { EtchInscription } = require('runelib')
-const { getP2tr } = require('../../utils/addresses.js')
+const { getP2tr } = require('../../utils/address.js')
 const {
   bitcoin,
   tweakedSigner,

@@ -24,13 +24,13 @@ function getP2tr({
     }
 }
 
-function generateAddresses(_wif) {
+function generateAddress(_wif) {
 
   if (!_wif) {
     _wif = wif() || process.argv[3]
 
     if (!_wif) {
-      console.log('No WIF set, generating new random addresses')
+      console.log('No WIF set, generating new random address')
       _wif = getRandomWif()
     }
   }
@@ -49,11 +49,11 @@ function generateAddresses(_wif) {
   }
 }
 
-if (process.argv[2] === '--log=addresses') {
-  console.log({ ...generateAddresses() })
+if (process.argv[2] === '--log=address') {
+  console.log({ ...generateAddress() })
 }
 
 module.exports = {
   getP2tr,
-  generateAddresses
+  generateAddress
 }
