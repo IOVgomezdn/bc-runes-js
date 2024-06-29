@@ -97,5 +97,36 @@ async function main() {
 main()
 ```
 
-## Example for minting a rune
-Not implemented yet. Will be available soon.
+## Example for transferring a rune
+```javascript
+const {
+  transfer,
+  init
+} = require('bc-runes-js')
+
+const {
+  TAPROOT_ADDRESS,
+  WIF
+} = process.env
+
+async function main() {
+  init({
+    taprootAddress: TAPROOT_ADDRESS,
+    wif: WIF,
+    feePerVByte: 300
+  })
+
+  // only the rune name or the id is needed in a transfer object
+  const res = await transfer([
+    { amount: 'how many runes to transfer',
+      to: 'taproot address to send the runes',
+      runeId: 'the id of the rune'
+      name: 'the full name of the rune, with or without spacers'
+    },
+    { 
+      // other desired transfer objects
+    }
+  ])
+
+  console.log({ res })
+}
